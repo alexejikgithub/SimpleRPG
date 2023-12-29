@@ -1,18 +1,19 @@
-﻿using SimpleRPG.CameraLogic;
+using SimpleRPG.CameraLogic;
 using SimpleRPG.Infrastructure;
 using SimpleRPG.Services.Input;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace SimpleRPG.Hero
 {
     public class HeroMove : MonoBehaviour
     {
         [SerializeField] private CharacterController _characterController;
-        [SerializeField] private float _movementSpeed = 4.0f;
+        [SerializeField] private float _movementSpeed;
         
         private IInputService _inputService;
         private Camera _camera;
+
+        private Vector3 _movementVector;
 
         private void Awake()
         {
@@ -22,28 +23,27 @@ namespace SimpleRPG.Hero
         private void Start()
         {
             _camera = Camera.main;
-            CameraFollow();
+            StartCameraFollow();
         }
+
+       
 
         private void Update()
         {
-            Vector3 movementVector = Vector3.zero;
-
+            _movementVector = Vector3.zero;
             if (_inputService.Axis.sqrMagnitude > Constants.Epsilon)
             {
-                //Трансформируем экранныые координаты вектора в мировые
-                movementVector = _camera.transform.TransformDirection(_inputService.Axis);
-                movementVector.y = 0;
-                movementVector.Normalize();
+                _movementVector = _camera.transform.TransformDirection(_inputService.Axis);
+                _movementVector.y = 0;
+                _movementVector.Normalize();
 
-                transform.forward = movementVector;
+                transform.forward = _movementVector;
             }
 
-            movementVector += Physics.gravity;
-            
-            _characterController.Move(_movementSpeed * movementVector * Time.deltaTime);
+            _movementVector += Physics.gravity;
+            _characterController.Move( _movementVector * (_movementSpeed * Time.deltaTime));
         }
-
-        private void CameraFollow() => _camera.GetComponent<CameraFollow>().Follow(gameObject);
+        
+        private void StartCameraFollow() => _camera.GetComponent<CameraFollow>().Follow(gameObject);
     }
 }

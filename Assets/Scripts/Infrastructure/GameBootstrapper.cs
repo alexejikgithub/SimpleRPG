@@ -1,4 +1,3 @@
-﻿using System;
 using UnityEngine;
 
 namespace SimpleRPG.Infrastructure
@@ -10,7 +9,6 @@ namespace SimpleRPG.Infrastructure
         private void Awake()
         {
             _game = new Game();
-
             DontDestroyOnLoad(this);
         }
     }
