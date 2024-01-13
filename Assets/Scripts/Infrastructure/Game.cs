@@ -6,22 +6,12 @@ namespace SimpleRPG.Infrastructure
     public class Game
     {
         public static IInputService InputService;
+        public readonly GameStateMachine StateMachine;
 
-        public Game()
+        public Game(ICoroutineRunner coroutineRunner)
         {
-            RegisterInputService();
+            StateMachine = new GameStateMachine(new SceneLoader(coroutineRunner));
         }
-
-        private static void RegisterInputService()
-        {
-            if (Application.isEditor)
-            {
-                InputService = new StandaloneInputService();
-            }
-            else
-            {
-                InputService = new MobileInputService();
-            }
-        }
+  
     }
 }
