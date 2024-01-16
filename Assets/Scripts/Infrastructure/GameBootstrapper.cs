@@ -1,45 +1,20 @@
-using System;
-using System.Collections;
+using CodeBase.Logic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace SimpleRPG.Infrastructure
 {
     public class GameBootstrapper : MonoBehaviour, ICoroutineRunner
     {
+        [SerializeField] private LoadingCurtain _curatin;
+        
         private Game _game;
 
         private void Awake()
         {
-            _game = new Game(this);
+            _game = new Game(this, _curatin);
             _game.StateMachine.Enter<BootstrapState>();
             DontDestroyOnLoad(this);
-        }
-    }
-
-    public class SceneLoader
-    {
-        private readonly ICoroutineRunner _coroutineRunner;
-
-        public SceneLoader(ICoroutineRunner coroutineRunner) => _coroutineRunner = coroutineRunner;
-
-        public void Load(string name, Action onLoaded = null) => _coroutineRunner.StartCoroutine(LoadScene(name, onLoaded));
-
-        private IEnumerator LoadScene(string name, Action onLoaded = null)
-        {
-            if (SceneManager.GetActiveScene().name == name)
-            {
-                onLoaded?.Invoke();
-                yield break;
-            }
-            AsyncOperation waitNextScene = SceneManager.LoadSceneAsync(name);
-
-            while (!waitNextScene.isDone)
-            {
-                yield return null;
-            }
-            
-            onLoaded?.Invoke();
         }
     }
 }

@@ -23,9 +23,7 @@ namespace SimpleRPG.Hero
         private void Start()
         {
             _camera = Camera.main;
-            StartCameraFollow();
         }
-
        
 
         private void Update()
@@ -44,6 +42,5 @@ namespace SimpleRPG.Hero
             _characterController.Move( _movementVector * (_movementSpeed * Time.deltaTime));
         }
         
-        private void StartCameraFollow() => _camera.GetComponent<CameraFollow>().Follow(gameObject);
     }
 }
