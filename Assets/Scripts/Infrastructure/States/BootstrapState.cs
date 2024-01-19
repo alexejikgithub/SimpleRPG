@@ -1,24 +1,29 @@
+using SimpleRPG.Infrastructure.AssetManagement;
+using SimpleRPG.Infrastructure.Factory;
+using SimpleRPG.Infrastructure.Services;
 using SimpleRPG.Services.Input;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-namespace SimpleRPG.Infrastructure
+namespace SimpleRPG.Infrastructure.States
 {
     public class BootstrapState : IState
     {
         private const string Initial = "Initial";
         private readonly GameStateMachine _stateMachine;
         private readonly SceneLoader _sceneLoader;
+        private readonly AllServices _allServices;
 
-        public BootstrapState(GameStateMachine stateMachine, SceneLoader sceneLoader)
+        public BootstrapState(GameStateMachine stateMachine, SceneLoader sceneLoader, AllServices services)
         {
             _stateMachine = stateMachine;
             _sceneLoader = sceneLoader;
+            _allServices = services;
+            
+            RegisterServices();
         }
 
         public void Enter()
         {
-            RegisterServices();
             _sceneLoader.Load(Initial,onLoaded: EnterLoadLevel);
         }
 
@@ -29,14 +34,16 @@ namespace SimpleRPG.Infrastructure
 
         private void RegisterServices()
         {
-            Game.InputService = RegisterInputService();
+            _allServices.RegisterSingle<IInputService>(InputService());
+            _allServices.RegisterSingle<IAssetProvider>(new AssetProvider());
+            _allServices.RegisterSingle<IGameFactory>(new GameFactory(_allServices.Single<IAssetProvider>()));
         }
 
         public void Exit()
         { 
         }
         
-        private InputService RegisterInputService()
+        private InputService InputService()
         {
             if (Application.isEditor)
             {

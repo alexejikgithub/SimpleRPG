@@ -1,6 +1,4 @@
-using System;
-
-namespace SimpleRPG.Infrastructure
+namespace SimpleRPG.Infrastructure.States
 {
     public class GameLoopState : IState
     {

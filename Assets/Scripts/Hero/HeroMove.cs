@@ -1,5 +1,6 @@
 using SimpleRPG.CameraLogic;
 using SimpleRPG.Infrastructure;
+using SimpleRPG.Infrastructure.Services;
 using SimpleRPG.Services.Input;
 using UnityEngine;
 
@@ -14,14 +15,11 @@ namespace SimpleRPG.Hero
         private Camera _camera;
 
         private Vector3 _movementVector;
-
-        private void Awake()
-        {
-            _inputService = Game.InputService;
-        }
+        
 
         private void Start()
         {
+            _inputService = AllServices.Container.Single<IInputService>();
             _camera = Camera.main;
         }
        

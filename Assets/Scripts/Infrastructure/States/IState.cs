@@ -1,4 +1,4 @@
- namespace SimpleRPG.Infrastructure
+ namespace SimpleRPG.Infrastructure.States
 {
     public interface IState:IExitableState
     {

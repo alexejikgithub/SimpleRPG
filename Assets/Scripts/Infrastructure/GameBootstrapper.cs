@@ -1,4 +1,5 @@
 using CodeBase.Logic;
+using SimpleRPG.Infrastructure.States;
 using UnityEngine;
 using UnityEngine.Serialization;
 
