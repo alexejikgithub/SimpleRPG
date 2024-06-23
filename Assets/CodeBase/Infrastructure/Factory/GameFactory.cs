@@ -12,17 +12,23 @@ namespace SimpleRPG.Infrastructure.Factory
     {
         private readonly IAssetProvider _assets;
 
-        public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
+		public event Action HeroCreated;
+
+		public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
         public List<ISaveProgress> ProgressWriters { get; } = new List<ISaveProgress>();
 
-        public GameFactory(IAssetProvider assets)
+		public GameObject HeroGameObject { get; set; }
+
+		public GameFactory(IAssetProvider assets)
         {
             _assets = assets;
         }
 
         public GameObject CreateHero(GameObject initialPoint)
 		{
-            return InstantiateRegistred(AssetPath.HeroPath, initialPoint.transform.position);
+			HeroGameObject = InstantiateRegistred(AssetPath.HeroPath, initialPoint.transform.position);
+			HeroCreated?.Invoke();
+			return HeroGameObject;
 		}
 		public void CreateHud()
 		{
