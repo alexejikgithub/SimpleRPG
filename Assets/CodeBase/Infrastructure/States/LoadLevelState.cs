@@ -3,7 +3,9 @@ using SimpleRPG.CameraLogic;
 using SimpleRPG.Infrastructure.Factory;
 using UnityEngine;
 using System;
+using SimpleRPG.Hero;
 using SimpleRPG.Services.PersistantProgress;
+using SimpleRPG.UI;
 
 namespace SimpleRPG.Infrastructure.States
 {
@@ -54,11 +56,17 @@ namespace SimpleRPG.Infrastructure.States
             }
 		}
 
+		private void InitHud(GameObject hero)
+		{
+			GameObject hud = _gameFactory.CreateHud();
+			hud.GetComponentInChildren<ActorUI>().Construct(hero.GetComponent<HeroHealth>());
+		}
+
 		private void InitGameWorld()
 		{
 			var hero = _gameFactory.CreateHero(GameObject.FindWithTag(InitialPointTag));
 			StartCameraFollow(hero);
-			_gameFactory.CreateHud();
+			InitHud(hero);
 		}
 
 		private void StartCameraFollow(GameObject hero)

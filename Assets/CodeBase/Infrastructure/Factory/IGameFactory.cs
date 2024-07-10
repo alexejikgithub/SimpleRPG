@@ -14,7 +14,7 @@ namespace SimpleRPG.Infrastructure.Factory
 		GameObject HeroGameObject { get; }
 
 		GameObject CreateHero(GameObject initialPoint);
-        void CreateHud();
+        GameObject CreateHud();
 		void Cleanup();
 
 

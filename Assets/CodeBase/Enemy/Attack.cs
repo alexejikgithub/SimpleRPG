@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using SimpleRPG.Hero;
 using SimpleRPG.Infrastructure.Factory;
 using SimpleRPG.Infrastructure.Services;
 using Unity.VisualScripting;
@@ -15,6 +16,7 @@ namespace SimpleRPG.Enemy
         [SerializeField] private float _attackCooldown = 2f;
         [SerializeField] private float _hitboxRadius = 0.5f;
         [SerializeField] private float _attackDistance = 0.5f;
+        [SerializeField] private float _damage=10;
 
         private IGameFactory _factory;
         private Transform _heroTransform;
@@ -23,6 +25,7 @@ namespace SimpleRPG.Enemy
         private int _layerMask;
         private Collider[] _hits = new Collider[1];
         private bool _isAttackActive;
+        
 
         private void Awake()
         {
@@ -45,8 +48,12 @@ namespace SimpleRPG.Enemy
         {
             if (Hit(out Collider hit))
             {
-                Debug.Log("!!!!!!!!");
                 PhysicsDebug.DrawDebug(StartPoint(), _hitboxRadius, 1);
+
+                if (hit.TryGetComponent<HeroHealth>(out HeroHealth heroHealth))
+                {
+                    heroHealth.TakeDamage(_damage);
+                }
             }
         }
 

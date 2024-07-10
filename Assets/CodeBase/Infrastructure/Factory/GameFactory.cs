@@ -30,9 +30,9 @@ namespace SimpleRPG.Infrastructure.Factory
 			HeroCreated?.Invoke();
 			return HeroGameObject;
 		}
-		public void CreateHud()
+		public GameObject CreateHud()
 		{
-			InstantiateRegistred(AssetPath.UIPath);
+			return InstantiateRegistred(AssetPath.UIPath);
 		}
 
 		private GameObject InstantiateRegistred(string prefabPath, Vector3 position)
