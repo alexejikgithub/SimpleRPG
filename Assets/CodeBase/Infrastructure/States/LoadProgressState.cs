@@ -38,6 +38,8 @@ namespace SimpleRPG.Infrastructure.States
 
 			progress.HeroState.MaxHP = 50;
 			progress.HeroState.ResetHP();
+			progress.HeroStats.Damage = 1f;
+			progress.HeroStats.DamageRadius = 1f;
 			
 			return progress;
 		}

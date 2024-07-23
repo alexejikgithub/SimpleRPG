@@ -2,28 +2,28 @@ using UnityEngine;
 
 namespace SimpleRPG.Enemy
 {
-    [RequireComponent(typeof(Attack))]
+    [RequireComponent(typeof(EnemyAttack))]
     public class CheckAttackRange : MonoBehaviour
     {
-        [SerializeField] private Attack _attack;
+        [SerializeField] private EnemyAttack enemyAttack;
         [SerializeField] private TriggerObserver _triggerObserver;
 
         private void Start()
         {
             _triggerObserver.TriggerEnter += TriggerEnter;
             _triggerObserver.TriggerExit += TriggerExit;
-            _attack.Disable();
+            enemyAttack.Disable();
         }
 
 
         private void TriggerEnter(Collider obj)
         {
-            _attack.Enable();
+            enemyAttack.Enable();
         }
 
         private void TriggerExit(Collider obj)
         {
-            _attack.Disable();
+            enemyAttack.Disable();
         }
     }
 }

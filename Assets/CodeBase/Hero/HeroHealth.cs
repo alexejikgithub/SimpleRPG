@@ -1,17 +1,19 @@
 using System;
 using SimpleRPG.Data;
+using SimpleRPG.Logic;
 using SimpleRPG.Services.PersistantProgress;
 using UnityEngine;
 
 namespace SimpleRPG.Hero
 {
     [RequireComponent(typeof(HeroAnimator))]
-    public class HeroHealth : MonoBehaviour, ISaveProgress, ISavedProgressReader
+    public class HeroHealth : MonoBehaviour, ISaveProgress, ISavedProgressReader, IHealth
     {
-        public Action HeathChanged;
-
+        public event Action HealthChanged;
         [SerializeField] private HeroAnimator _heroAnimator;
         private State _state;
+
+        
 
         public float Current
         {
@@ -20,8 +22,8 @@ namespace SimpleRPG.Hero
             {
                 if (_state.CurrentHP != value)
                 {
-                    HeathChanged?.Invoke();
                     _state.CurrentHP = value;
+                    HealthChanged?.Invoke();
                 }
             }
         }
@@ -35,7 +37,7 @@ namespace SimpleRPG.Hero
         public void LoadProgress(PlayerProgress progress)
         {
             _state = progress.HeroState;
-            HeathChanged?.Invoke();
+            HealthChanged?.Invoke();
         }
 
         public void UpdateProgress(PlayerProgress progress)
