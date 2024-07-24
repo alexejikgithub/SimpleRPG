@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace SimpleRPG.Hero
 {
-	public class HeroMove : MonoBehaviour, ISaveProgress, ISavedProgressReader
+	public class HeroMove : MonoBehaviour, ISavedProgress, ISavedProgressReader
 	{
 		[SerializeField] private CharacterController _characterController;
 		[SerializeField] private float _movementSpeed;

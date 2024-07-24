@@ -10,13 +10,17 @@ namespace SimpleRPG.Infrastructure.Factory
     {
 		event Action HeroCreated;
 		List<ISavedProgressReader> ProgressReaders { get; }
-		List<ISaveProgress> ProgressWriters { get; }
+		List<ISavedProgress> ProgressWriters { get; }
 		GameObject HeroGameObject { get; }
 
 		GameObject CreateHero(GameObject initialPoint);
         GameObject CreateHud();
 		void Cleanup();
 
+		public void Register(ISavedProgressReader progressReader)
+		{
+		}
 
-	}
+
+    }
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - InitialPoint
   - LoadingCurtain
+  - EnemySpawner
   layers:
   - Default
   - TransparentFX

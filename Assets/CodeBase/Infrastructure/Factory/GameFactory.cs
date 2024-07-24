@@ -15,7 +15,7 @@ namespace SimpleRPG.Infrastructure.Factory
 		public event Action HeroCreated;
 
 		public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
-        public List<ISaveProgress> ProgressWriters { get; } = new List<ISaveProgress>();
+        public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
 
 		public GameObject HeroGameObject { get; set; }
 
@@ -61,9 +61,9 @@ namespace SimpleRPG.Infrastructure.Factory
             ProgressReaders.Clear();
             ProgressWriters.Clear();
         }
-		private void Register(ISavedProgressReader progressReader)
+		public void Register(ISavedProgressReader progressReader)
 		{
-			if(progressReader is ISaveProgress progressWriter)
+			if(progressReader is ISavedProgress progressWriter)
             {
                 ProgressWriters.Add(progressWriter);
             }

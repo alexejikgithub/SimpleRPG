@@ -25,7 +25,7 @@ namespace SimpleRPG.Infrastructure.Services.SaveLoad
 
 		public void SaveProgress()
 		{
-			foreach (ISaveProgress progressWriter in _gameFactory.ProgressWriters)
+			foreach (ISavedProgress progressWriter in _gameFactory.ProgressWriters)
 			{
 				progressWriter.UpdateProgress(_progressService.PlayerProgress);
 			}

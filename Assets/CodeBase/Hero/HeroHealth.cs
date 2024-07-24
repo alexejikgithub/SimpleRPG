@@ -7,7 +7,7 @@ using UnityEngine;
 namespace SimpleRPG.Hero
 {
     [RequireComponent(typeof(HeroAnimator))]
-    public class HeroHealth : MonoBehaviour, ISaveProgress, ISavedProgressReader, IHealth
+    public class HeroHealth : MonoBehaviour, ISavedProgress, ISavedProgressReader, IHealth
     {
         public event Action HealthChanged;
         [SerializeField] private HeroAnimator _heroAnimator;

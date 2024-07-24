@@ -18,6 +18,8 @@ namespace SimpleRPG.Infrastructure.States
         private readonly IGameFactory _gameFactory;
 		private readonly IPersistantProgressService _progressService;
 
+		private const string EnemySpawnerTag = "EnemySpawner";
+
 		public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingCurtain curtain, IGameFactory gameFactory, IPersistantProgressService progressService)
         {
             _stateMachine = stateMachine;
@@ -64,9 +66,20 @@ namespace SimpleRPG.Infrastructure.States
 
 		private void InitGameWorld()
 		{
+			InitSpawners();
 			var hero = _gameFactory.CreateHero(GameObject.FindWithTag(InitialPointTag));
 			StartCameraFollow(hero);
 			InitHud(hero);
+		}
+		
+		//TODO refactor method without strings
+		private void InitSpawners()
+		{
+			foreach (var spawnerObject in GameObject.FindGameObjectsWithTag(EnemySpawnerTag))
+			{
+				var spawner = spawnerObject.GetComponent<EnemySpawner>();
+				_gameFactory.Register(spawner);
+			}
 		}
 
 		private void StartCameraFollow(GameObject hero)
