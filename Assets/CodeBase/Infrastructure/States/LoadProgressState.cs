@@ -1,6 +1,7 @@
 ﻿using SimpleRPG.Data;
 using SimpleRPG.Infrastructure.Services.SaveLoad;
 using SimpleRPG.Services.PersistantProgress;
+using UnityEngine;
 
 namespace SimpleRPG.Infrastructure.States
 {

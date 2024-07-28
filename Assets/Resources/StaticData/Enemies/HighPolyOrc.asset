@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: HighPolyOrc
   m_EditorClassIdentifier: 
   EnemyTypeId: 1
-  Hp: 47
-  Damage: 10.2
-  MoveSpeed: 9.4
+  Hp: 12
+  Damage: 3.6
+  MoveSpeed: 1.7
   MaxLoot: 1
   MinLoot: 7
   Prefab: {fileID: 388476414, guid: 57ecc65902ba0744098f6cf1302722c6, type: 3}

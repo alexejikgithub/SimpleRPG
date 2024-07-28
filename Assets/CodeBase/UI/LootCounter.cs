@@ -1,10 +1,11 @@
 using SimpleRPG.Data;
+using SimpleRPG.Services.PersistantProgress;
 using TMPro;
 using UnityEngine;
 
 namespace SimpleRPG.UI
 {
-    public class LootCounter : MonoBehaviour
+    public class LootCounter : MonoBehaviour,ISavedProgress, ISavedProgressReader
     {
         [SerializeField] private TextMeshProUGUI _counter;
 
@@ -23,7 +24,18 @@ namespace SimpleRPG.UI
 
         private void UpdateCounter()
         {
+            
             _counter.text = $"{_worldData.LootData.CollectedAmount}";
+        }
+
+        public void UpdateProgress(PlayerProgress progress)
+        {
+            progress.WorldData.LootData = _worldData.LootData;
+        }
+
+        public void LoadProgress(PlayerProgress progress)
+        {
+            _worldData.LootData = progress.WorldData.LootData;
         }
     }
 }

@@ -40,7 +40,6 @@ namespace SimpleRPG.Infrastructure.Factory
         public GameObject CreateHud()
         {
             GameObject hud = InstantiateRegistred(AssetPath.UIPath);
-            RegisterProgressWatchers(hud);
             hud.GetComponentInChildren<LootCounter>().Construct(_persistantProgressService.PlayerProgress.WorldData);
             return hud;
         }

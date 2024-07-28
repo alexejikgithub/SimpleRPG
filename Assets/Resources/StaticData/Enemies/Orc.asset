@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Orc
   m_EditorClassIdentifier: 
   EnemyTypeId: 0
-  Hp: 17
-  Damage: 7.2
+  Hp: 7
+  Damage: 3.2
   MoveSpeed: 2
   MaxLoot: 1
   MinLoot: 5

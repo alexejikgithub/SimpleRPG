@@ -1,5 +1,6 @@
 using System;
 using SimpleRPG.Enemy;
+using UnityEngine;
 
 namespace SimpleRPG.Data
 {
@@ -8,9 +9,10 @@ namespace SimpleRPG.Data
     {
         public Action Changed;
 
-        private int _collectedAmount;
+        [SerializeField] private int _collectedAmount;
 
         public int CollectedAmount => _collectedAmount;
+
 
         public void Collect(Loot loot)
         {
