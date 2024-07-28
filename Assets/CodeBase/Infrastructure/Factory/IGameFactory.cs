@@ -1,26 +1,24 @@
 using SimpleRPG.Infrastructure.Services;
 using SimpleRPG.Services.PersistantProgress;
-using System;
 using System.Collections.Generic;
+using SimpleRPG.Enemy;
+using SimpleRPG.Logic;
 using UnityEngine;
 
 namespace SimpleRPG.Infrastructure.Factory
 {
     public interface IGameFactory: IService
     {
-		event Action HeroCreated;
-		List<ISavedProgressReader> ProgressReaders { get; }
+	    List<ISavedProgressReader> ProgressReaders { get; }
 		List<ISavedProgress> ProgressWriters { get; }
-		GameObject HeroGameObject { get; }
 
 		GameObject CreateHero(GameObject initialPoint);
         GameObject CreateHud();
 		void Cleanup();
 
-		public void Register(ISavedProgressReader progressReader)
-		{
-		}
-
-
+		public void Register(ISavedProgressReader progressReader);
+		
+		GameObject CreateEnemy(EnemyTypeId enemyType, Transform parent);
+		LootPiece CreateLoot();
     }
 }

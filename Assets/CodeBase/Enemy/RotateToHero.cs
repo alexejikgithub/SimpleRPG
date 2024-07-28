@@ -1,5 +1,3 @@
-using SimpleRPG.Infrastructure.Factory;
-using SimpleRPG.Infrastructure.Services;
 using UnityEngine;
 
 namespace SimpleRPG.Enemy
@@ -9,18 +7,13 @@ namespace SimpleRPG.Enemy
     public float Speed;
 
     private Transform _heroTransform;
-    private IGameFactory _gameFactory;
     private Vector3 _positionToLook;
 
-    private void Start()
+    public void Construct(Transform heroTransform)
     {
-      _gameFactory = AllServices.Container.Single<IGameFactory>();
-
-      if (IsHeroExist())
-        InitializeHeroTransform();
-      else
-        _gameFactory.HeroCreated += HeroCreated;
+      _heroTransform = heroTransform;
     }
+    
 
     private void Update()
     {
@@ -28,15 +21,7 @@ namespace SimpleRPG.Enemy
         RotateTowardsHero();
     }
 
-    private void OnDestroy()
-    {
-      if(_gameFactory != null)
-        _gameFactory.HeroCreated -= HeroCreated;
-    }
-
-    private bool IsHeroExist() => 
-      _gameFactory.HeroGameObject != null;
-
+  
     private void RotateTowardsHero()
     {
       UpdatePositionToLookAt();
@@ -62,10 +47,5 @@ namespace SimpleRPG.Enemy
     private bool IsInitialized() => 
       _heroTransform != null;
     
-    private void HeroCreated() =>
-      InitializeHeroTransform();
-
-    private void InitializeHeroTransform() =>
-      _heroTransform = _gameFactory.HeroGameObject.transform;
   }
 }

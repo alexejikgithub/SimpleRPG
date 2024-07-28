@@ -8,7 +8,7 @@ namespace SimpleRPG.Enemy
     [RequireComponent(typeof(EnemyHealth), typeof(EnemyAnimator))]
     public class EnemyDeath : MonoBehaviour
     {
-        public event Action Happaned;
+        public event Action Happened;
         
         [SerializeField] private EnemyHealth _health;
         [SerializeField] private EnemyAnimator _animator;
@@ -41,7 +41,7 @@ namespace SimpleRPG.Enemy
             _follow.enabled = false;
             SpawnFx();
             StartCoroutine(DestroyCorpse());
-            Happaned?.Invoke();
+            Happened?.Invoke();
         }
 
         private void SpawnFx()

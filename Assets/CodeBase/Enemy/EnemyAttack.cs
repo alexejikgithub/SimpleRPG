@@ -1,11 +1,5 @@
-using System;
 using System.Linq;
-using SimpleRPG.Hero;
-using SimpleRPG.Infrastructure.Factory;
-using SimpleRPG.Infrastructure.Services;
 using SimpleRPG.Logic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
 namespace SimpleRPG.Enemy
@@ -16,11 +10,9 @@ namespace SimpleRPG.Enemy
         [SerializeField] private EnemyAnimator _animator;
         [SerializeField] private float _attackCooldown = 2f;
         [SerializeField] private float _hitboxRadius = 0.5f;
-        [SerializeField] private float _attackDistance = 0.5f;
         [SerializeField] private float _damage = 10;
         [SerializeField] private Transform _weaponTransform;
 
-        private IGameFactory _factory;
         private Transform _heroTransform;
         private float _currentAttackCooldown;
         private bool _isAttacking;
@@ -29,10 +21,13 @@ namespace SimpleRPG.Enemy
         private bool _isAttackActive;
 
 
+        public void Construct(Transform heroTransform)
+        {
+            _heroTransform = heroTransform;
+        }
+
         private void Awake()
         {
-            _factory = AllServices.Container.Single<IGameFactory>();
-            _factory.HeroCreated += OnHeroCreated;
 
             _layerMask = 1 << LayerMask.NameToLayer("Player");
         }
@@ -44,6 +39,11 @@ namespace SimpleRPG.Enemy
             {
                 StartAttack();
             }
+        }
+
+        public void SetDamage(float damage)
+        {
+            _damage = damage;
         }
 
         private void OnAttack()
@@ -67,7 +67,6 @@ namespace SimpleRPG.Enemy
             return hitsCount > 0;
         }
 
-     
 
         private void OnAttackEnded()
         {
@@ -100,9 +99,6 @@ namespace SimpleRPG.Enemy
         {
             return _currentAttackCooldown <= 0;
         }
-
-        private void OnHeroCreated() =>
-            _heroTransform = _factory.HeroGameObject.transform;
 
         public void Disable()
         {

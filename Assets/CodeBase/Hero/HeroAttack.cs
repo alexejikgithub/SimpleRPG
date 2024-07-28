@@ -58,7 +58,7 @@ namespace SimpleRPG.Hero
         private void OnDrawGizmos()
         {
             Gizmos.color=Color.white;
-            Gizmos.DrawSphere(_weaponTransform.position,_stats.DamageRadius);
+            Gizmos.DrawSphere(_weaponTransform.position,1f);
         }
 
         
