@@ -9,6 +9,8 @@ namespace SimpleRPG.Enemy
 {
     public class LootPiece : MonoBehaviour
     {
+        public Action PickedUp;
+        
         [SerializeField] private GameObject _model;
         [SerializeField] private GameObject _pickupFxPrefab;
         [SerializeField] private TextMeshPro _lootText;
@@ -40,6 +42,8 @@ namespace SimpleRPG.Enemy
 
             _isPicked = true;
          
+            PickedUp?.Invoke();
+            
             _worldData.LootData.Collect(_loot);
 
             HideModel();

@@ -44,7 +44,7 @@ namespace SimpleRPG.Infrastructure.Factory
             return hud;
         }
 
-        public GameObject CreateEnemy(EnemyTypeId enemyType, Transform parent)
+        public GameObject CreateEnemy(EnemyTypeId enemyType, Transform parent, ILootSpawner lootSpawner)
         {
             EnemyStaticData enemyData = _staticData.ForEnemy(enemyType);
             GameObject enemy = Object.Instantiate(enemyData.Prefab, parent.position, Quaternion.identity, parent);
@@ -59,10 +59,6 @@ namespace SimpleRPG.Infrastructure.Factory
             enemy.GetComponent<RotateToHero>()?.Construct(HeroGameObject.transform);
 
             enemy.GetComponent<NavMeshAgent>().speed = enemyData.MoveSpeed;
-
-            var lootSpawner = enemy.GetComponentInChildren<LootSpawner>();
-            lootSpawner.SetLoot(enemyData.MinLoot, enemyData.MaxLoot);
-            lootSpawner.Construct(this);
 
             var enemyAttack = enemy.GetComponent<EnemyAttack>();
             enemyAttack.SetDamage(enemyData.Damage);

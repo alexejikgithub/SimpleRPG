@@ -18,7 +18,7 @@ namespace SimpleRPG.Infrastructure.Factory
 
 		public void Register(ISavedProgressReader progressReader);
 		
-		GameObject CreateEnemy(EnemyTypeId enemyType, Transform parent);
+		GameObject CreateEnemy(EnemyTypeId enemyType, Transform parent, ILootSpawner lootSpawner);
 		LootPiece CreateLoot();
     }
 }

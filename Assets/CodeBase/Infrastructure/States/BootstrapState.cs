@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using SimpleRPG.Enemy;
 using SimpleRPG.Infrastructure.AssetManagement;
 using SimpleRPG.Infrastructure.Factory;
 using SimpleRPG.Infrastructure.Services;
@@ -22,13 +23,13 @@ namespace SimpleRPG.Infrastructure.States
             _stateMachine = stateMachine;
             _sceneLoader = sceneLoader;
             _allServices = services;
-            
+
             RegisterServices();
         }
 
         public void Enter()
         {
-            _sceneLoader.Load(Initial,onLoaded: EnterLoadLevel);
+            _sceneLoader.Load(Initial, onLoaded: EnterLoadLevel);
         }
 
         private void EnterLoadLevel()
@@ -42,8 +43,13 @@ namespace SimpleRPG.Infrastructure.States
             _allServices.RegisterSingle<IInputService>(InputService());
             _allServices.RegisterSingle<IAssetProvider>(new AssetProvider());
             _allServices.RegisterSingle<IPersistantProgressService>(new PersistantProgressService());
-			_allServices.RegisterSingle<IGameFactory>(new GameFactory(_allServices.Single<IAssetProvider>(),_allServices.Single<IStaticDataService>(),AllServices.Container.Single<IPersistantProgressService>()));
-			_allServices.RegisterSingle<ISaveLoadService>(new SaveLoadService(_allServices.Single<IPersistantProgressService>(), _allServices.Single<IGameFactory>()));
+            _allServices.RegisterSingle<IGameFactory>(new GameFactory(_allServices.Single<IAssetProvider>(),
+                _allServices.Single<IStaticDataService>(), AllServices.Container.Single<IPersistantProgressService>()));
+            _allServices.RegisterSingle<ISaveLoadService>(
+                new SaveLoadService(_allServices.Single<IPersistantProgressService>(),
+                    _allServices.Single<IGameFactory>()));
+            _allServices.RegisterSingle<ILootSpawner>(new LootSpawner(_allServices.Single<IGameFactory>(),
+                _allServices.Single<IStaticDataService>()));
         }
 
         private void RegisterStaticData()
@@ -54,20 +60,19 @@ namespace SimpleRPG.Infrastructure.States
         }
 
         public void Exit()
-        { 
+        {
         }
-        
+
         private InputService InputService()
         {
             if (Application.isEditor)
             {
-               return new StandaloneInputService();
+                return new StandaloneInputService();
             }
             else
             {
                 return new MobileInputService();
             }
         }
-        
     }
 }
