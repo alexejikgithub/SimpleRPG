@@ -5,7 +5,9 @@ using UnityEngine;
 using System;
 using SimpleRPG.Hero;
 using SimpleRPG.Services.PersistantProgress;
+using SimpleRPG.StaticData;
 using SimpleRPG.UI;
+using UnityEngine.SceneManagement;
 
 namespace SimpleRPG.Infrastructure.States
 {
@@ -17,17 +19,19 @@ namespace SimpleRPG.Infrastructure.States
         private readonly LoadingCurtain _curtain;
         private readonly IGameFactory _gameFactory;
 		private readonly IPersistantProgressService _progressService;
+		private readonly IStaticDataService _staticData;
 
 		private const string EnemySpawnerTag = "EnemySpawner";
 
-		public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingCurtain curtain, IGameFactory gameFactory, IPersistantProgressService progressService)
+		public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingCurtain curtain, IGameFactory gameFactory, IPersistantProgressService progressService, IStaticDataService staticData)
         {
             _stateMachine = stateMachine;
             _sceneLoader = sceneLoader;
             _curtain = curtain;
             _gameFactory = gameFactory;
 			_progressService = progressService;
-		}
+			_staticData = staticData;
+        }
 
         public void Enter(string sceneName)
         {
@@ -72,13 +76,14 @@ namespace SimpleRPG.Infrastructure.States
 			InitHud(hero);
 		}
 		
-		//TODO refactor method without strings
 		private void InitSpawners()
 		{
-			foreach (var spawnerObject in GameObject.FindGameObjectsWithTag(EnemySpawnerTag))
+			string sceneKey = SceneManager.GetActiveScene().name;
+			LevelStaticData levelData = _staticData.ForLevel(sceneKey);
+			foreach (var enemySpawnerData in levelData.EnemySpawners)
 			{
-				var spawner = spawnerObject.GetComponent<EnemySpawner>();
-				_gameFactory.Register(spawner);
+				_gameFactory.CreateSpawner(enemySpawnerData.Position, enemySpawnerData.Id,
+					enemySpawnerData.EnemyTypeId);
 			}
 		}
 

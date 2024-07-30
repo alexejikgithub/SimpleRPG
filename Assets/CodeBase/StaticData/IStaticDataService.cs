@@ -7,5 +7,6 @@ namespace SimpleRPG.StaticData
     {
         void LoadEnemies();
         EnemyStaticData ForEnemy(EnemyTypeId typeId);
+        LevelStaticData ForLevel(string sceneKey);
     }
 }

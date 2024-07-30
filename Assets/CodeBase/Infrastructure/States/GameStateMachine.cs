@@ -5,6 +5,7 @@ using SimpleRPG.Infrastructure.Factory;
 using SimpleRPG.Infrastructure.Services;
 using SimpleRPG.Services.PersistantProgress;
 using SimpleRPG.Infrastructure.Services.SaveLoad;
+using SimpleRPG.StaticData;
 
 namespace SimpleRPG.Infrastructure.States
 {
@@ -18,7 +19,7 @@ namespace SimpleRPG.Infrastructure.States
             _state = new Dictionary<Type, IExitableState>()
             {
                 [typeof(BootstrapState)] = new BootstrapState(this,sceneLoader, services),
-                [typeof(LoadLevelState)] = new LoadLevelState(this,sceneLoader,curtain, services.Single<IGameFactory>(), services.Single<IPersistantProgressService>()),
+                [typeof(LoadLevelState)] = new LoadLevelState(this,sceneLoader,curtain, services.Single<IGameFactory>(), services.Single<IPersistantProgressService>(), services.Single<IStaticDataService>()),
                 [typeof(LoadProgressState)] = new LoadProgressState(this, services.Single<IPersistantProgressService>(), services.Single<ISaveLoadService>()),
                 [typeof(GameLoopState)] = new GameLoopState(this)
             };

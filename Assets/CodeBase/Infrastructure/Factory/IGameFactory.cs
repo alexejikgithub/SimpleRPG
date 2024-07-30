@@ -15,10 +15,9 @@ namespace SimpleRPG.Infrastructure.Factory
 		GameObject CreateHero(GameObject initialPoint);
         GameObject CreateHud();
 		void Cleanup();
-
-		public void Register(ISavedProgressReader progressReader);
 		
 		GameObject CreateEnemy(EnemyTypeId enemyType, Transform parent, ILootSpawner lootSpawner);
 		LootPiece CreateLoot();
+		void CreateSpawner(Vector3 position, string SpawnerId, EnemyTypeId enemyTypeId);
     }
 }

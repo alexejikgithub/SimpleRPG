@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using SimpleRPG.Enemy;
 using SimpleRPG.Infrastructure.Services;
 using SimpleRPG.Logic;
+using SimpleRPG.Logic.EnemySpawners;
 using SimpleRPG.StaticData;
 using SimpleRPG.UI;
 using UnityEngine;
@@ -71,6 +72,12 @@ namespace SimpleRPG.Infrastructure.Factory
             LootPiece lootPiece = InstantiateRegistred(AssetPath.Loot).GetComponent<LootPiece>();
             lootPiece.Construct(_persistantProgressService.PlayerProgress.WorldData);
             return lootPiece;
+        }
+
+        public void CreateSpawner(Vector3 position, string SpawnerId, EnemyTypeId enemyTypeId)
+        {
+            SpawnPoint spawner = InstantiateRegistred(AssetPath.Spawner, position).GetComponent<SpawnPoint>();
+            spawner.Construct(SpawnerId, enemyTypeId, this, AllServices.Container.Single<ILootSpawner>());
         }
 
         private GameObject InstantiateRegistred(string prefabPath, Vector3 position)
