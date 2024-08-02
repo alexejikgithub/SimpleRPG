@@ -7,6 +7,8 @@ using SimpleRPG.Logic;
 using SimpleRPG.Logic.EnemySpawners;
 using SimpleRPG.StaticData;
 using SimpleRPG.UI;
+using SimpleRPG.UI.Elements;
+using SimpleRPG.UI.Services.Windows;
 using UnityEngine;
 using UnityEngine.AI;
 using Object = UnityEngine.Object;
@@ -18,6 +20,7 @@ namespace SimpleRPG.Infrastructure.Factory
         private readonly IAssetProvider _assets;
         private readonly IStaticDataService _staticData;
         private readonly IPersistantProgressService _persistantProgressService;
+        private readonly IWindowService _windowService;
 
         public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
         public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
@@ -25,11 +28,12 @@ namespace SimpleRPG.Infrastructure.Factory
         public GameObject HeroGameObject { get; set; }
 
         public GameFactory(IAssetProvider assets, IStaticDataService staticData,
-            IPersistantProgressService persistantProgressService)
+            IPersistantProgressService persistantProgressService,IWindowService windowService)
         {
             _assets = assets;
             _staticData = staticData;
             _persistantProgressService = persistantProgressService;
+            _windowService = windowService;
         }
 
         public GameObject CreateHero(GameObject initialPoint)
@@ -42,6 +46,12 @@ namespace SimpleRPG.Infrastructure.Factory
         {
             GameObject hud = InstantiateRegistred(AssetPath.UIPath);
             hud.GetComponentInChildren<LootCounter>().Construct(_persistantProgressService.PlayerProgress.WorldData);
+
+            foreach (OpenWindowButton openWindowButton in hud.GetComponentsInChildren<OpenWindowButton>())
+            {
+                openWindowButton.Construct(_windowService);
+            }
+            
             return hud;
         }
 

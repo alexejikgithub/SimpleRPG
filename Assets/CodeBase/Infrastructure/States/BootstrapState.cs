@@ -3,10 +3,13 @@ using SimpleRPG.Enemy;
 using SimpleRPG.Infrastructure.AssetManagement;
 using SimpleRPG.Infrastructure.Factory;
 using SimpleRPG.Infrastructure.Services;
+using SimpleRPG.Infrastructure.Services.Ads;
 using SimpleRPG.Infrastructure.Services.SaveLoad;
 using SimpleRPG.Services.Input;
 using SimpleRPG.Services.PersistantProgress;
 using SimpleRPG.StaticData;
+using SimpleRPG.UI.Services.Factory;
+using SimpleRPG.UI.Services.Windows;
 using UnityEngine;
 
 namespace SimpleRPG.Infrastructure.States
@@ -40,16 +43,29 @@ namespace SimpleRPG.Infrastructure.States
         private void RegisterServices()
         {
             RegisterStaticData();
+            RegisterAdsService();
             _allServices.RegisterSingle<IInputService>(InputService());
             _allServices.RegisterSingle<IAssetProvider>(new AssetProvider());
             _allServices.RegisterSingle<IPersistantProgressService>(new PersistantProgressService());
+            _allServices.RegisterSingle<IUiFactory>(new UiFactory(_allServices.Single<IAssetProvider>(),
+                _allServices.Single<IStaticDataService>(), _allServices.Single<IPersistantProgressService>(),_allServices.Single<IAdsService>()));
+            _allServices.RegisterSingle<IWindowService>(new WindowService(_allServices.Single<IUiFactory>()));
             _allServices.RegisterSingle<IGameFactory>(new GameFactory(_allServices.Single<IAssetProvider>(),
-                _allServices.Single<IStaticDataService>(), AllServices.Container.Single<IPersistantProgressService>()));
+                _allServices.Single<IStaticDataService>(), _allServices.Single<IPersistantProgressService>(),_allServices.Single<IWindowService>()));
             _allServices.RegisterSingle<ISaveLoadService>(
                 new SaveLoadService(_allServices.Single<IPersistantProgressService>(),
                     _allServices.Single<IGameFactory>()));
             _allServices.RegisterSingle<ILootSpawner>(new LootSpawner(_allServices.Single<IGameFactory>(),
                 _allServices.Single<IStaticDataService>()));
+            
+           
+        }
+
+        private void RegisterAdsService()
+        {
+            var adsService = new AdsService();
+            adsService.InitializeAds();
+            _allServices.RegisterSingle<IAdsService>(adsService);
         }
 
         private void RegisterStaticData()

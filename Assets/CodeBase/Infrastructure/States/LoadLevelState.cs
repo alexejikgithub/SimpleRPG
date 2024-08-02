@@ -2,11 +2,11 @@ using SimpleRPG.Logic;
 using SimpleRPG.CameraLogic;
 using SimpleRPG.Infrastructure.Factory;
 using UnityEngine;
-using System;
 using SimpleRPG.Hero;
 using SimpleRPG.Services.PersistantProgress;
 using SimpleRPG.StaticData;
-using SimpleRPG.UI;
+using SimpleRPG.UI.Elements;
+using SimpleRPG.UI.Services.Factory;
 using UnityEngine.SceneManagement;
 
 namespace SimpleRPG.Infrastructure.States
@@ -20,10 +20,11 @@ namespace SimpleRPG.Infrastructure.States
         private readonly IGameFactory _gameFactory;
 		private readonly IPersistantProgressService _progressService;
 		private readonly IStaticDataService _staticData;
+		private readonly IUiFactory _uiFactory;
 
 		private const string EnemySpawnerTag = "EnemySpawner";
 
-		public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingCurtain curtain, IGameFactory gameFactory, IPersistantProgressService progressService, IStaticDataService staticData)
+		public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingCurtain curtain, IGameFactory gameFactory, IPersistantProgressService progressService, IStaticDataService staticData, IUiFactory uiFactory)
         {
             _stateMachine = stateMachine;
             _sceneLoader = sceneLoader;
@@ -31,6 +32,7 @@ namespace SimpleRPG.Infrastructure.States
             _gameFactory = gameFactory;
 			_progressService = progressService;
 			_staticData = staticData;
+			_uiFactory = uiFactory;
         }
 
         public void Enter(string sceneName)
@@ -39,22 +41,27 @@ namespace SimpleRPG.Infrastructure.States
             _gameFactory.Cleanup();
             _sceneLoader.Load(sceneName, OnLoaded);
         }
-
-
+        
         public void Exit()
         {
             _curtain.Hide();
         }
 
         private void OnLoaded()
-		{
+        {
+	        InitUiRoot();
 			InitGameWorld();
             InformProgressReaders();
 
 			_stateMachine.Enter<GameLoopState>();
 		}
 
-		private void InformProgressReaders()
+        private void InitUiRoot()
+        {
+	        _uiFactory.CreateUIRoot();
+        }
+
+        private void InformProgressReaders()
 		{
             foreach (ISavedProgressReader progressReader in _gameFactory.ProgressReaders)
             {
