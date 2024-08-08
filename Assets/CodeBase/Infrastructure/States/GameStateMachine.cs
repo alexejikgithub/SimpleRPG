@@ -10,7 +10,7 @@ using SimpleRPG.UI.Services.Factory;
 
 namespace SimpleRPG.Infrastructure.States
 {
-    public class GameStateMachine
+    public class GameStateMachine : IGameStateMachine
     {
         private readonly Dictionary<Type, IExitableState> _state;
         private IExitableState _activeState;

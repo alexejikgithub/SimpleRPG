@@ -13,7 +13,6 @@ namespace SimpleRPG.Infrastructure.States
 {
     public class LoadLevelState : IPayloadedState<string>
     {
-        private const string InitialPointTag = "InitialPoint";
         private readonly GameStateMachine _stateMachine;
         private readonly SceneLoader _sceneLoader;
         private readonly LoadingCurtain _curtain;
@@ -77,16 +76,24 @@ namespace SimpleRPG.Infrastructure.States
 
 		private void InitGameWorld()
 		{
-			InitSpawners();
-			var hero = _gameFactory.CreateHero(GameObject.FindWithTag(InitialPointTag));
+			var levelData = GetLevelStaticData();
+
+			InitSpawners(levelData);
+			GameObject hero = _gameFactory.CreateHero(levelData);
 			StartCameraFollow(hero);
 			InitHud(hero);
 		}
-		
-		private void InitSpawners()
+
+		private LevelStaticData GetLevelStaticData()
 		{
 			string sceneKey = SceneManager.GetActiveScene().name;
 			LevelStaticData levelData = _staticData.ForLevel(sceneKey);
+			return levelData;
+		}
+
+		private void InitSpawners(LevelStaticData levelData)
+		{
+			
 			foreach (var enemySpawnerData in levelData.EnemySpawners)
 			{
 				_gameFactory.CreateSpawner(enemySpawnerData.Position, enemySpawnerData.Id,

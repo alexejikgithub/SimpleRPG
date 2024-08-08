@@ -3,6 +3,7 @@ using SimpleRPG.Services.PersistantProgress;
 using System.Collections.Generic;
 using SimpleRPG.Enemy;
 using SimpleRPG.Logic;
+using SimpleRPG.StaticData;
 using UnityEngine;
 
 namespace SimpleRPG.Infrastructure.Factory
@@ -12,7 +13,7 @@ namespace SimpleRPG.Infrastructure.Factory
 	    List<ISavedProgressReader> ProgressReaders { get; }
 		List<ISavedProgress> ProgressWriters { get; }
 
-		GameObject CreateHero(GameObject initialPoint);
+		GameObject CreateHero(LevelStaticData initialPoint);
         GameObject CreateHud();
 		void Cleanup();
 		

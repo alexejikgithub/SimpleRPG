@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace SimpleRPG.Logic
 {
   public enum AnimatorState

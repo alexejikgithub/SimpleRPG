@@ -20,3 +20,4 @@ MonoBehaviour:
   - Id: Main_d209c346-162d-4688-95d4-a0e55df4551c
     EnemyTypeId: 0
     Position: {x: -67.63012, y: 4.4725285, z: 96.61547}
+  InitialHeroPosition: {x: -61.87, y: 5.3, z: 82.5}

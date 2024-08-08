@@ -36,9 +36,9 @@ namespace SimpleRPG.Infrastructure.Factory
             _windowService = windowService;
         }
 
-        public GameObject CreateHero(GameObject initialPoint)
+        public GameObject CreateHero(LevelStaticData levelStaticData)
         {
-            HeroGameObject = InstantiateRegistred(AssetPath.HeroPath, initialPoint.transform.position);
+            HeroGameObject = InstantiateRegistred(AssetPath.HeroPath, levelStaticData.InitialHeroPosition);
             return HeroGameObject;
         }
 
