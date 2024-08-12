@@ -1,5 +1,6 @@
 using SimpleRPG.Logic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace SimpleRPG.StaticData
 {
@@ -16,6 +17,6 @@ namespace SimpleRPG.StaticData
         public int MaxLoot;
         public int MinLoot;
 
-        public GameObject Prefab;
+        public AssetReferenceGameObject PrefabRference;
     }
 }

@@ -10,6 +10,7 @@ using SimpleRPG.Services.PersistantProgress;
 using SimpleRPG.StaticData;
 using SimpleRPG.UI.Services.Factory;
 using SimpleRPG.UI.Services.Windows;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SimpleRPG.Infrastructure.States
@@ -46,20 +47,32 @@ namespace SimpleRPG.Infrastructure.States
             RegisterAdsService();
             _allServices.RegisterSingle<IGameStateMachine>(_stateMachine);
             _allServices.RegisterSingle<IInputService>(InputService());
-            _allServices.RegisterSingle<IAssetProvider>(new AssetProvider());
+            RegisterAssetProvider();
             _allServices.RegisterSingle<IPersistantProgressService>(new PersistantProgressService());
+            
             _allServices.RegisterSingle<IUiFactory>(new UiFactory(_allServices.Single<IAssetProvider>(),
                 _allServices.Single<IStaticDataService>(), _allServices.Single<IPersistantProgressService>(),_allServices.Single<IAdsService>()));
+            
             _allServices.RegisterSingle<IWindowService>(new WindowService(_allServices.Single<IUiFactory>()));
+            
             _allServices.RegisterSingle<IGameFactory>(new GameFactory(_allServices.Single<IAssetProvider>(),
                 _allServices.Single<IStaticDataService>(), _allServices.Single<IPersistantProgressService>(),_allServices.Single<IWindowService>()));
+            
             _allServices.RegisterSingle<ISaveLoadService>(
                 new SaveLoadService(_allServices.Single<IPersistantProgressService>(),
                     _allServices.Single<IGameFactory>()));
+            
             _allServices.RegisterSingle<ILootSpawner>(new LootSpawner(_allServices.Single<IGameFactory>(),
                 _allServices.Single<IStaticDataService>()));
             
            
+        }
+
+        private void RegisterAssetProvider()
+        {
+            var assetProvider = new AssetProvider();
+            assetProvider.Initialize();
+            _allServices.RegisterSingle<IAssetProvider>(assetProvider);
         }
 
         private void RegisterAdsService()

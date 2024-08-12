@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using SimpleRPG.Data;
 using SimpleRPG.Enemy;
 using SimpleRPG.Infrastructure.Factory;
@@ -77,17 +78,17 @@ namespace SimpleRPG.Logic.EnemySpawners
             }
         }
 
-        private void Spawn()
+        private async void Spawn()
         {
-            GameObject enemy = _factory.CreateEnemy(_enemyType, transform,_lootSpawner);
+            GameObject enemy = await _factory.CreateEnemy(_enemyType, transform,_lootSpawner);
             _enemyDeath = enemy.GetComponent<EnemyDeath>();
             _enemyDeath.Happened += Died;
         }
 
-        private void SpawnLoot(Vector3 position)
+        private async void SpawnLoot(Vector3 position)
         {
             _deathPosition = position;
-            _lootPiece = _lootSpawner.SpawnLoot(_deathPosition, _enemyType);
+            _lootPiece = await _lootSpawner.SpawnLoot(_deathPosition, _enemyType);
             _lootPiece.PickedUp += PickupLoot;
         }
 

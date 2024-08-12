@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using SimpleRPG.Enemy;
 using SimpleRPG.Infrastructure.Services;
 using SimpleRPG.Logic;
@@ -7,6 +8,6 @@ namespace SimpleRPG.Infrastructure.Factory
 {
     public interface ILootSpawner : IService
     {
-       LootPiece SpawnLoot(Vector3 position, EnemyTypeId enemyType);
+       Task<LootPiece> SpawnLoot(Vector3 position, EnemyTypeId enemyType);
     }
 }

@@ -1,12 +1,12 @@
 using SimpleRPG.Infrastructure.AssetManagement;
 using SimpleRPG.Services.PersistantProgress;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using SimpleRPG.Enemy;
 using SimpleRPG.Infrastructure.Services;
 using SimpleRPG.Logic;
 using SimpleRPG.Logic.EnemySpawners;
 using SimpleRPG.StaticData;
-using SimpleRPG.UI;
 using SimpleRPG.UI.Elements;
 using SimpleRPG.UI.Services.Windows;
 using UnityEngine;
@@ -28,7 +28,7 @@ namespace SimpleRPG.Infrastructure.Factory
         public GameObject HeroGameObject { get; set; }
 
         public GameFactory(IAssetProvider assets, IStaticDataService staticData,
-            IPersistantProgressService persistantProgressService,IWindowService windowService)
+            IPersistantProgressService persistantProgressService, IWindowService windowService)
         {
             _assets = assets;
             _staticData = staticData;
@@ -36,29 +36,39 @@ namespace SimpleRPG.Infrastructure.Factory
             _windowService = windowService;
         }
 
-        public GameObject CreateHero(LevelStaticData levelStaticData)
+        public async Task WarmUp()
         {
-            HeroGameObject = InstantiateRegistred(AssetPath.HeroPath, levelStaticData.InitialHeroPosition);
+            await _assets.Load<GameObject>(AssetsAddresses.Loot);
+            await _assets.Load<GameObject>(AssetsAddresses.Spawner);
+        }
+
+        public async Task<GameObject> CreateHero(LevelStaticData levelStaticData)
+        {
+            HeroGameObject = await InstantiateRegistredAsync(AssetsAddresses.HeroPath, levelStaticData.InitialHeroPosition);
             return HeroGameObject;
         }
 
-        public GameObject CreateHud()
+        public async Task<GameObject> CreateHud()
         {
-            GameObject hud = InstantiateRegistred(AssetPath.UIPath);
+            GameObject hud = await InstantiateRegistredAsync(AssetsAddresses.UIPath);
             hud.GetComponentInChildren<LootCounter>().Construct(_persistantProgressService.PlayerProgress.WorldData);
 
             foreach (OpenWindowButton openWindowButton in hud.GetComponentsInChildren<OpenWindowButton>())
             {
                 openWindowButton.Construct(_windowService);
             }
-            
+
             return hud;
         }
 
-        public GameObject CreateEnemy(EnemyTypeId enemyType, Transform parent, ILootSpawner lootSpawner)
+        public async Task<GameObject> CreateEnemy(EnemyTypeId enemyType, Transform parent, ILootSpawner lootSpawner)
         {
             EnemyStaticData enemyData = _staticData.ForEnemy(enemyType);
-            GameObject enemy = Object.Instantiate(enemyData.Prefab, parent.position, Quaternion.identity, parent);
+
+
+            GameObject prefab = await _assets.Load<GameObject>(enemyData.PrefabRference);
+
+            GameObject enemy = Object.Instantiate(prefab, parent.position, Quaternion.identity, parent);
 
             var health = enemy.GetComponent<EnemyHealth>();
             health.Current = enemyData.Hp;
@@ -77,32 +87,49 @@ namespace SimpleRPG.Infrastructure.Factory
             return enemy;
         }
 
-        public LootPiece CreateLoot()
+        public async Task<LootPiece> CreateLoot()
         {
-            LootPiece lootPiece = InstantiateRegistred(AssetPath.Loot).GetComponent<LootPiece>();
+            GameObject prefab = await _assets.Load<GameObject>(AssetsAddresses.Loot);
+            LootPiece lootPiece = InstantiateRegistred(prefab).GetComponent<LootPiece>();
             lootPiece.Construct(_persistantProgressService.PlayerProgress.WorldData);
             return lootPiece;
         }
 
-        public void CreateSpawner(Vector3 position, string SpawnerId, EnemyTypeId enemyTypeId)
+        public async Task CreateSpawner(Vector3 position, string SpawnerId, EnemyTypeId enemyTypeId)
         {
-            SpawnPoint spawner = InstantiateRegistred(AssetPath.Spawner, position).GetComponent<SpawnPoint>();
+            GameObject prefab = await _assets.Load<GameObject>(AssetsAddresses.Spawner);
+            
+            SpawnPoint spawner = InstantiateRegistred(prefab, position).GetComponent<SpawnPoint>();
             spawner.Construct(SpawnerId, enemyTypeId, this, AllServices.Container.Single<ILootSpawner>());
         }
 
-        private GameObject InstantiateRegistred(string prefabPath, Vector3 position)
+        private async Task<GameObject> InstantiateRegistredAsync(string prefabPath, Vector3 position)
         {
-            GameObject gameObject = _assets.Instantiate(prefabPath, position);
+            GameObject gameObject = await _assets.Instantiate(prefabPath, position);
+            RegisterProgressWatchers(gameObject);
+            return gameObject;
+        }
+        private async Task<GameObject> InstantiateRegistredAsync(string prefabPath)
+        {
+            GameObject gameObject = await _assets.Instantiate(prefabPath);
+            RegisterProgressWatchers(gameObject);
+            return gameObject;
+        }
+        
+        private GameObject InstantiateRegistred(GameObject prefab, Vector3 position)
+        {
+            GameObject gameObject = Object.Instantiate(prefab, position,Quaternion.identity);
+            RegisterProgressWatchers(gameObject);
+            return gameObject;
+        }
+        private GameObject InstantiateRegistred(GameObject prefab)
+        {
+            GameObject gameObject = Object.Instantiate(prefab);
             RegisterProgressWatchers(gameObject);
             return gameObject;
         }
 
-        private GameObject InstantiateRegistred(string prefabPath)
-        {
-            GameObject gameObject = _assets.Instantiate(prefabPath);
-            RegisterProgressWatchers(gameObject);
-            return gameObject;
-        }
+        
 
         private void RegisterProgressWatchers(GameObject gameObject)
         {
@@ -116,6 +143,7 @@ namespace SimpleRPG.Infrastructure.Factory
         {
             ProgressReaders.Clear();
             ProgressWriters.Clear();
+            _assets.Cleanup();
         }
 
         public void Register(ISavedProgressReader progressReader)

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using SimpleRPG.Logic;
 using SimpleRPG.CameraLogic;
 using SimpleRPG.Infrastructure.Factory;
@@ -38,26 +39,43 @@ namespace SimpleRPG.Infrastructure.States
         {
             _curtain.Show();
             _gameFactory.Cleanup();
+            _gameFactory.WarmUp();
             _sceneLoader.Load(sceneName, OnLoaded);
         }
-        
+
         public void Exit()
         {
             _curtain.Hide();
         }
 
-        private void OnLoaded()
+        private async void OnLoaded()
         {
-	        InitUiRoot();
-			InitGameWorld();
+	        await InitUiRoot();
+			await InitGameWorld();
             InformProgressReaders();
 
 			_stateMachine.Enter<GameLoopState>();
 		}
 
-        private void InitUiRoot()
+        private async Task InitGameWorld()
         {
-	        _uiFactory.CreateUIRoot();
+	        var levelData = GetLevelStaticData();
+
+	        await InitSpawners(levelData);
+	        GameObject hero = await _gameFactory.CreateHero(levelData);
+	        StartCameraFollow(hero);
+	        await InitHud(hero);
+        }
+
+        private async Task InitUiRoot()
+        {
+	        await _uiFactory.CreateUIRoot();
+        }
+
+        private async Task InitHud(GameObject hero)
+        {
+	        GameObject hud = await _gameFactory.CreateHud();
+	        hud.GetComponentInChildren<ActorUI>().Construct(hero.GetComponent<HeroHealth>());
         }
 
         private void InformProgressReaders()
@@ -68,40 +86,24 @@ namespace SimpleRPG.Infrastructure.States
             }
 		}
 
-		private void InitHud(GameObject hero)
-		{
-			GameObject hud = _gameFactory.CreateHud();
-			hud.GetComponentInChildren<ActorUI>().Construct(hero.GetComponent<HeroHealth>());
-		}
-
-		private void InitGameWorld()
-		{
-			var levelData = GetLevelStaticData();
-
-			InitSpawners(levelData);
-			GameObject hero = _gameFactory.CreateHero(levelData);
-			StartCameraFollow(hero);
-			InitHud(hero);
-		}
-
-		private LevelStaticData GetLevelStaticData()
+        private LevelStaticData GetLevelStaticData()
 		{
 			string sceneKey = SceneManager.GetActiveScene().name;
 			LevelStaticData levelData = _staticData.ForLevel(sceneKey);
 			return levelData;
 		}
 
-		private void InitSpawners(LevelStaticData levelData)
+        private async Task InitSpawners(LevelStaticData levelData)
 		{
 			
 			foreach (var enemySpawnerData in levelData.EnemySpawners)
 			{
-				_gameFactory.CreateSpawner(enemySpawnerData.Position, enemySpawnerData.Id,
+			 await	_gameFactory.CreateSpawner(enemySpawnerData.Position, enemySpawnerData.Id,
 					enemySpawnerData.EnemyTypeId);
 			}
 		}
 
-		private void StartCameraFollow(GameObject hero)
+        private void StartCameraFollow(GameObject hero)
         {
             Camera.main.GetComponent<CameraFollow>().Follow(hero);
         }

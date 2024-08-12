@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using SimpleRPG.Infrastructure.Factory;
 using SimpleRPG.Logic;
 using SimpleRPG.StaticData;
@@ -16,9 +17,9 @@ namespace SimpleRPG.Enemy
             _staticData = staticData;
         }
         
-        public LootPiece SpawnLoot(Vector3 position, EnemyTypeId enemyType)
+        public async Task<LootPiece> SpawnLoot(Vector3 position, EnemyTypeId enemyType)
         {
-           LootPiece lootPiece = _factory.CreateLoot();
+           LootPiece lootPiece = await _factory.CreateLoot();
            lootPiece.transform.position = position;
 
            var lootItem = new Loot();

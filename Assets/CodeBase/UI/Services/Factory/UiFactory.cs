@@ -1,10 +1,10 @@
+using System.Threading.Tasks;
 using SimpleRPG.Infrastructure.AssetManagement;
 using SimpleRPG.Infrastructure.Services.Ads;
 using SimpleRPG.Services.PersistantProgress;
 using SimpleRPG.StaticData;
 using SimpleRPG.StaticData.Windows;
 using SimpleRPG.UI.Services.Windows;
-using SimpleRPG.UI.Windows;
 using SimpleRPG.UI.Windows.Shop;
 using UnityEngine;
 
@@ -12,7 +12,7 @@ namespace SimpleRPG.UI.Services.Factory
 {
     public class UiFactory : IUiFactory
     {
-        private const string _UiRootPath = "UI/UIRoot";
+        private const string _UiRootPath = "UIRoot";
         
         private IStaticDataService _staticData;
         private IAssetProvider _asset;
@@ -37,9 +37,10 @@ namespace SimpleRPG.UI.Services.Factory
             window.Construct(_adsService,_progressService);
         }
 
-        public void CreateUIRoot()
+        public async Task CreateUIRoot()
         {
-            _uiRoot = _asset.Instantiate(_UiRootPath).transform;
+            GameObject instantiate = await _asset.Instantiate(_UiRootPath);
+            _uiRoot =  instantiate.transform;
         }
     }
 }

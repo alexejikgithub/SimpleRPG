@@ -16,7 +16,42 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 33815848dd650974bbe894a17dac06d8
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 57ecc65902ba0744098f6cf1302722c6
+    m_Address: HighPolyOrc
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 62e8fa736b3fcb54f9acc14b34fea785
+    m_Address: Orc
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5f4c3e45e4f2808449f5957e3e35bf93
+    m_Address: Loot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e160fbc68b1507c45997f963edd29b0b
+    m_Address: SpawnPoint
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b466cbc732cf98f418e0944ba785a072
+    m_Address: Hero
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f6395af14c6ae2d4ea00c7e97e633ad3
+    m_Address: Hud
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e843fcb3a71bf954796ad60fcda36a9a
+    m_Address: UIRoot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a994dbc9bbedf5541ae4657eb188e2a4, type: 2}
   m_SchemaSet:
